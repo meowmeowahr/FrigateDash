@@ -61,6 +61,15 @@ A `settings.json` file must be created inside the program directory before launc
 }
 ```
 
+### resolution
+* Must be the same aspect ratio as the original source
+* Ex: `[640, 480]`
+
+### mini_resolution
+* Resolution used in the grid view
+* Must be the same aspect ratio as the original source
+* Ex: `[320, 240]`
+
 ### Common values for "keys"
 * Up: 16777235
 * Down: 16777237
