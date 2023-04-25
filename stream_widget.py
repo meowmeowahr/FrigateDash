@@ -69,7 +69,7 @@ class Display(QLabel):
         self.worker = None
 
         self.setAlignment(Qt.AlignCenter)
-        self.resize(200, 200)
+        self.resize(100, 100)
 
     def setUrl(self, url: str):
         self.url = url
