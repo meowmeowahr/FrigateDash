@@ -1,0 +1,4 @@
+PyQt5>=5.15.2
+PyQtWebEngine>=5.15.2
+opencv-python~=4.7.0.72
+numpy~=1.24.3
