@@ -1,5 +1,4 @@
 import cv2
-import time
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -19,9 +18,6 @@ class FrameWorker(QThread):
         self.resolution = resolution
         self.__thread_active = True
         self.__thread_pause = False
-        self.time_elapsed = 0
-        self.prev_time = 0
-        self.fps = 5
 
     def run(self) -> None:
         cap = cv2.VideoCapture(self.url, cv2.CAP_FFMPEG)
@@ -30,24 +26,19 @@ class FrameWorker(QThread):
             while self.__thread_active:
                 ret, frame = cap.read()
 
-                self.time_elapsed = time.time() - self.prev_time
+                if ret:
+                    height, width, channels = frame.shape
+                    bytes_per_line = width * channels
 
-                if self.time_elapsed > 1. / self.fps:
-                    self.prev_time = time.time()
+                    cv_rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    qt_rgb_image = QImage(cv_rgb_image.data, width, height, bytes_per_line, QImage.Format_RGB888)
+                    qt_rgb_image_scaled = qt_rgb_image.scaled(self.resolution[0], self.resolution[1],
+                                                              Qt.AspectRatioMode.KeepAspectRatio)
 
-                    if ret:
-                        height, width, channels = frame.shape
-                        bytes_per_line = width * channels
-
-                        cv_rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                        qt_rgb_image = QImage(cv_rgb_image.data, width, height, bytes_per_line, QImage.Format_RGB888)
-                        qt_rgb_image_scaled = qt_rgb_image.scaled(self.resolution[0], self.resolution[1],
-                                                                  Qt.AspectRatioMode.KeepAspectRatio)
-
-                        self.ImageUpdated.emit(qt_rgb_image_scaled)
-                        self.ImageUpdated2.emit(qt_rgb_image_scaled)
-                    else:
-                        break
+                    self.ImageUpdated.emit(qt_rgb_image_scaled)
+                    self.ImageUpdated2.emit(qt_rgb_image_scaled)
+                else:
+                    break
         cap.release()
         self.quit()
 
