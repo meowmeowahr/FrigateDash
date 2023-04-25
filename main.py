@@ -203,15 +203,15 @@ if __name__ == "__main__":
     if settings["enable_gpio"]:
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(settings["arrow_gpios"][0], GPIO.IN)
-        GPIO.setup(settings["arrow_gpios"][1], GPIO.IN)
+        GPIO.setup(settings["arrow_gpios"][0], GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(settings["arrow_gpios"][1], GPIO.IN, GPIO.PUD_UP)
 
     app = QApplication(sys.argv)
     splash = SplashScreen()
     window = MainWindow()
 
     if settings["enable_gpio"]:
-        GPIO.add_event_detect(settings["arrow_gpios"][0], GPIO.RISING, callback=gpio_change)
-        GPIO.add_event_detect(settings["arrow_gpios"][1], GPIO.RISING, callback=gpio_change)
+        GPIO.add_event_detect(settings["arrow_gpios"][0], GPIO.FALLING, callback=gpio_change, bouncetime=200)
+        GPIO.add_event_detect(settings["arrow_gpios"][1], GPIO.FALLING, callback=gpio_change, bouncetime=200)
 
     sys.exit(app.exec())
