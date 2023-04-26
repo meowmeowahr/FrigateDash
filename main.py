@@ -4,6 +4,7 @@ import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import qt_thread_updater
 
 import platform
 import sys
@@ -186,9 +187,9 @@ class PaginationView(QWidget):
 
 def gpio_change(pin):
     if pin == settings["arrow_gpios"][0]:
-        window.page_view.previous()
+        qt_thread_updater.get_updater().call_latest(window.page_view.previous)
     elif pin == settings["arrow_gpios"][1]:
-        window.page_view.next()
+        qt_thread_updater.get_updater().call_latest(window.page_view.next)
 
 
 if __name__ == "__main__":
