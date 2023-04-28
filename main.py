@@ -212,7 +212,7 @@ if __name__ == "__main__":
     window = MainWindow()
 
     if settings["enable_gpio"]:
-        GPIO.add_event_detect(settings["arrow_gpios"][0], GPIO.FALLING, callback=gpio_change, bouncetime=200)
-        GPIO.add_event_detect(settings["arrow_gpios"][1], GPIO.FALLING, callback=gpio_change, bouncetime=200)
+        GPIO.add_event_detect(settings["arrow_gpios"][0], GPIO.RISING, callback=gpio_change, bouncetime=100)
+        GPIO.add_event_detect(settings["arrow_gpios"][1], GPIO.RISING, callback=gpio_change, bouncetime=100)
 
     sys.exit(app.exec())
