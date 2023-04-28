@@ -75,3 +75,5 @@ A `settings.json` file must be created inside the program directory before launc
 * Down: 16777237
 * Left: 16777234
 * Right: 16777236
+* Shift: 16777248
+* Space: 32
