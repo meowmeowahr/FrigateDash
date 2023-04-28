@@ -21,15 +21,15 @@ A `settings.json` file must be created inside the program directory before launc
   "views": [
     {
       "stream":  "rtsp://admin:PASSWORD@192.168.1.23:554/cam/realmonitor?channel=1&subtype=0",
-      "name":  "Camera 1"
+      "name":  "Patio Camera"
     },
     {
       "stream":  "rtsp://admin:PASSWORD@192.168.1.21:554/cam/realmonitor?channel=1&subtype=0",
-      "name":  "Camera 2"
+      "name":  "East Camera"
     },
     {
       "stream":  "rtsp://admin:PASSWORD@192.168.1.22:554/cam/realmonitor?channel=1&subtype=0",
-      "name":  "Camera 3"
+      "name":  "North Camera"
     }
   ],
   "grid_view": {
@@ -37,22 +37,22 @@ A `settings.json` file must be created inside the program directory before launc
     "cameras": [
       {
         "stream":  "rtsp://admin:PASSWORD@192.168.1.23:554/cam/realmonitor?channel=1&subtype=1",
-        "name":  "Camera 1"
+        "name":  "Patio Camera"
       },
       {
         "stream":  "rtsp://admin:PASSWORD@192.168.1.21:554/cam/realmonitor?channel=1&subtype=1",
-        "name":  "Camera 2"
+        "name":  "East Camera"
       },
       {
         "stream":  "rtsp://admin:PASSWORD@192.168.1.22:554/cam/realmonitor?channel=1&subtype=1",
-        "name":  "Camera 3"
+        "name":  "North Camera"
       }
     ]
   },
   "resolution": [640, 480],
   "mini_resolution": [320, 240],
-  "arrow_gpios": [21, 20],
-  "enable_gpio": false,
+  "arrow_gpios": [13, 21],
+  "enable_gpio": true,
   "keys": [16777234, 16777236],
   "clock": true,
   "name": true,
