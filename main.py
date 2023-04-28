@@ -93,12 +93,43 @@ class MainWindow(QMainWindow):
         self.camera_widget.setLayout(self.camera_grid)
         self.page_view.addView(self.camera_widget, "name")
 
+        self.ss_button = QPushButton()
+        self.ss_button.pressed.connect(clock.toggle)
+        self.ss_button.setShortcut(settings["keys"][2])
+        self.ss_button.setFixedSize(QSize(0, 0))
+        self.root_layout.addWidget(self.ss_button)
+
     def open(self):
         self.showFullScreen()
 
     def set_windows_dark(self, dark: bool):
         if platform.system() == "Windows":
             windll.LoadLibrary("dwmapi").DwmSetWindowAttribute(int(self.winId()), 20, byref(c_bool(dark)), sizeof(BOOL))
+
+
+class ScreenSaver(QMainWindow):
+    def __init__(self):
+        super(ScreenSaver, self).__init__()
+
+        self.root_widget = QWidget()
+        self.setCentralWidget(self.root_widget)
+
+        self.root_layout = QVBoxLayout()
+        self.root_widget.setLayout(self.root_layout)
+
+        self.ss_button = QPushButton()
+        self.ss_button.pressed.connect(self.toggle)
+        self.ss_button.setShortcut(settings["keys"][2])
+        self.ss_button.setFixedSize(QSize(0, 0))
+        self.root_layout.addWidget(self.ss_button)
+
+        self.hide()
+
+    def toggle(self):
+        if self.isActiveWindow():
+            self.hide()
+        else:
+            self.showFullScreen()
 
 
 # noinspection PyArgumentList
@@ -121,7 +152,7 @@ class PaginationView(QWidget):
         self.back_button = QPushButton()
         self.back_button.setIcon(QIcon(asset_dir("arrow-left-circle.svg")))
         self.back_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.back_button.clicked.connect(self.previous)
+        self.back_button.pressed.connect(self.previous)
         self.back_button.setDisabled(self.pages.currentIndex() == 0)
         self.back_button.setIconSize(QSize(24, 24))
         self.pagination_layout.addWidget(self.back_button)
@@ -146,7 +177,7 @@ class PaginationView(QWidget):
         self.next_button = QPushButton()
         self.next_button.setIcon(QIcon(asset_dir("arrow-right-circle.svg")))
         self.next_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.next_button.clicked.connect(self.next)
+        self.next_button.pressed.connect(self.next)
         self.next_button.setEnabled(self.pages.currentIndex() == self.pages.count())
         self.next_button.setIconSize(QSize(24, 24))
         self.pagination_layout.addWidget(self.next_button)
@@ -190,6 +221,8 @@ def gpio_change(pin):
         qt_thread_updater.get_updater().call_latest(window.page_view.previous)
     elif pin == settings["arrow_gpios"][1]:
         qt_thread_updater.get_updater().call_latest(window.page_view.next)
+    elif pin == settings["arrow_gpios"][2]:
+        qt_thread_updater.get_updater().call_latest(clock.toggle)
 
 
 if __name__ == "__main__":
@@ -206,13 +239,16 @@ if __name__ == "__main__":
         GPIO.setwarnings(False)
         GPIO.setup(settings["arrow_gpios"][0], GPIO.IN, GPIO.PUD_UP)
         GPIO.setup(settings["arrow_gpios"][1], GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(settings["arrow_gpios"][2], GPIO.IN, GPIO.PUD_UP)
 
     app = QApplication(sys.argv)
     splash = SplashScreen()
+    clock = ScreenSaver()
     window = MainWindow()
 
     if settings["enable_gpio"]:
         GPIO.add_event_detect(settings["arrow_gpios"][0], GPIO.RISING, callback=gpio_change, bouncetime=100)
         GPIO.add_event_detect(settings["arrow_gpios"][1], GPIO.RISING, callback=gpio_change, bouncetime=100)
+        GPIO.add_event_detect(settings["arrow_gpios"][2], GPIO.RISING, callback=gpio_change, bouncetime=100)
 
     sys.exit(app.exec())
