@@ -111,6 +111,16 @@ class ScreenSaver(QMainWindow):
     def __init__(self):
         super(ScreenSaver, self).__init__()
 
+        self.setWindowTitle("FrigateDash")
+        self.setWindowIcon(QIcon(asset_dir("cctv.svg")))
+        self.set_windows_dark(True)
+
+        if settings["no_cursor"]:
+            self.setCursor(Qt.CursorShape.BlankCursor)
+
+        with open(asset_dir("style.qss"), "r") as file:
+            self.setStyleSheet(file.read())
+
         self.root_widget = QWidget()
         self.setCentralWidget(self.root_widget)
 
@@ -130,6 +140,10 @@ class ScreenSaver(QMainWindow):
             self.hide()
         else:
             self.showFullScreen()
+
+    def set_windows_dark(self, dark: bool):
+        if platform.system() == "Windows":
+            windll.LoadLibrary("dwmapi").DwmSetWindowAttribute(int(self.winId()), 20, byref(c_bool(dark)), sizeof(BOOL))
 
 
 # noinspection PyArgumentList
