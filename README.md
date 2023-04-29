@@ -33,6 +33,7 @@ A `settings.json` file must be created inside the program directory before launc
     }
   ],
   "grid_view": {
+    "enable": false,
     "size": 2,
     "cameras": [
       {

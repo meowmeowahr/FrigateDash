@@ -82,17 +82,18 @@ class MainWindow(QMainWindow):
             self.page_view.addView(self.media_views[index], view["name"])
 
         # grid view
-        self.camera_grid = QGridLayout()
-        for index, view in enumerate(self.media_views):
-            item = stream_widget.Display()
-            item.setUrl(settings["grid_view"]["cameras"][index]["stream"])
-            item.run(settings["mini_resolution"])
-            self.camera_grid.addWidget(item, index % settings["grid_view"]["size"],
-                                       index // settings["grid_view"]["size"])
+        if settings["grid_view"]["enable"]:
+            self.camera_grid = QGridLayout()
+            for index, view in enumerate(self.media_views):
+                item = stream_widget.Display()
+                item.setUrl(settings["grid_view"]["cameras"][index]["stream"])
+                item.run(settings["mini_resolution"])
+                self.camera_grid.addWidget(item, index % settings["grid_view"]["size"],
+                                           index // settings["grid_view"]["size"])
 
-        self.camera_widget = QWidget()
-        self.camera_widget.setLayout(self.camera_grid)
-        self.page_view.addView(self.camera_widget, "name")
+            self.camera_widget = QWidget()
+            self.camera_widget.setLayout(self.camera_grid)
+            self.page_view.addView(self.camera_widget, "Grid")
 
         self.ss_button = QPushButton()
         self.ss_button.pressed.connect(clock.toggle)
