@@ -19,3 +19,7 @@ QLabel {
 QFrame {
     border: 2px soild #ffffff;
 }
+
+#time {
+    font-size: 72px;
+}

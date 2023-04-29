@@ -1,5 +1,6 @@
 import datetime
 import json
+import random
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -107,6 +108,7 @@ class MainWindow(QMainWindow):
             windll.LoadLibrary("dwmapi").DwmSetWindowAttribute(int(self.winId()), 20, byref(c_bool(dark)), sizeof(BOOL))
 
 
+# noinspection PyArgumentList
 class ScreenSaver(QMainWindow):
     def __init__(self):
         super(ScreenSaver, self).__init__()
@@ -133,6 +135,20 @@ class ScreenSaver(QMainWindow):
         self.ss_button.setFixedSize(QSize(0, 0))
         self.root_layout.addWidget(self.ss_button)
 
+        self.time_timer = QTimer()
+        self.time_timer.setInterval(15000)
+        self.time_timer.timeout.connect(self.time_update)
+        self.time_timer.start()
+
+        self.time = QLabel()
+        self.time.setObjectName("time")
+        self.time.setFixedSize(self.time.sizeHint())
+        self.root_layout.addWidget(self.time)
+        self.time.move(QPoint(random.randint(self.width() // 2 - self.time.width() // 2 - 20,
+                                             self.width() // 2 - self.time.width() // 2 + 20),
+                              random.randint(self.height() // 2 - self.time.height() // 2 - 20,
+                                             self.height() // 2 - self.time.height() // 2 + 20)))
+
         self.hide()
 
     def toggle(self):
@@ -144,6 +160,14 @@ class ScreenSaver(QMainWindow):
     def set_windows_dark(self, dark: bool):
         if platform.system() == "Windows":
             windll.LoadLibrary("dwmapi").DwmSetWindowAttribute(int(self.winId()), 20, byref(c_bool(dark)), sizeof(BOOL))
+
+    def time_update(self):
+        self.time.setText(f"{datetime.datetime.now().strftime('%I:%M %p')}")
+        self.time.setFixedSize(self.time.sizeHint())
+        self.time.move(QPoint(random.randint(self.width() // 2 - self.time.width() // 2 - 20,
+                                             self.width() // 2 - self.time.width() // 2 + 20),
+                              random.randint(self.height() // 2 - self.time.height() // 2 - 20,
+                                             self.height() // 2 - self.time.height() // 2 + 20)))
 
 
 # noinspection PyArgumentList
